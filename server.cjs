@@ -16,7 +16,7 @@ const https = require("https");
 require("dotenv").config();
 
 const PORT    = parseInt(process.env.PORT || "3001", 10);
-const API_KEY = process.env.ANTHROPIC_API_KEY || "";
+const API_KEY = process.env.VITE_ANTHROPIC_API_KEY || "";
 
 if (!API_KEY || API_KEY.includes("paste-your-key")) {
   console.error("\n❌  No API key found.");
