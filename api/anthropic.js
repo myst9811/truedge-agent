@@ -64,7 +64,7 @@ export default function handler(req, res) {
       apiRes.pipe(res);
     });
 
-    proxy.setTimeout(30_000, () => {
+    proxy.setTimeout(55_000, () => {
       proxy.destroy();
       if (!res.headersSent) {
         res.status(504).json({ error: { message: "Upstream request timed out" } });
