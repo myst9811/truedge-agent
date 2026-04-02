@@ -365,7 +365,9 @@ export default function App() {
   const [schedule,      setSchedule]      = useState(() => lsGet(LS_SCHEDULE, { frequency: "daily", isActive: false, lastRun: null }));
   const [proxyStatus,   setProxyStatus]   = useState("checking");
 
-  const timerRef = useRef(null);
+  const timerRef    = useRef(null);
+  const scheduleRef = useRef(schedule);
+  useEffect(() => { scheduleRef.current = schedule; }, [schedule]);
 
   useEffect(() => {
     if (briefs.length) setActiveBriefId(briefs[0].id);
@@ -380,8 +382,10 @@ export default function App() {
     clearInterval(timerRef.current);
     if (!schedule.isActive) return;
     timerRef.current = setInterval(() => {
-      const interval = schedule.frequency === "daily" ? 86_400_000 : 604_800_000;
-      if (Date.now() - (schedule.lastRun || 0) >= interval) handleRun(schedule.frequency);
+      const { frequency, lastRun, isActive } = scheduleRef.current;
+      if (!isActive) return;
+      const interval = frequency === "daily" ? 86_400_000 : 604_800_000;
+      if (Date.now() - (lastRun || 0) >= interval) handleRun(frequency);
     }, 60_000);
     return () => clearInterval(timerRef.current);
   }, [schedule.isActive, schedule.frequency, schedule.lastRun]);
